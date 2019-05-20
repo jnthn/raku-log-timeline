@@ -169,4 +169,4 @@ with %*ENV<LOG_TIMELINE_SERVER> {
 orwith %*ENV<LOG_TIMELINE_JSON_LINES> {
     PROCESS::<$LOG-TIMELINE-OUTPUT> = Log::Timeline::Output::JSONLines.new(path => .IO);
 }
-END .close with PROCESS::<$LOG-TIMELINE-OUTPUT>;
+END try .close with PROCESS::<$LOG-TIMELINE-OUTPUT>;
