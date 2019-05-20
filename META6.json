@@ -1,0 +1,21 @@
+{
+  "name": "Log::Timeline",
+  "description": "Log tasks with start/end periods and phases, as well as individual events.",
+  "version": "0.1",
+  "perl": "6.d",
+  "auth": "Write me!",
+  "depends": [
+    "JSON::Fast"
+  ],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "Log::Timeline": "lib/Log/Timeline.pm6",
+    "Log::Timeline::Output": "lib/Log/Timeline/Output.pm6",
+    "Log::Timeline::Output::JSONLines": "lib/Log/Timeline/Output/JSONLines.pm6",
+    "Log::Timeline::Output::Socket": "lib/Log/Timeline/Output/Socket.pm6"
+  },
+  "resources": [],
+  "license": "Write me!",
+  "source-url": "Write me!"
+}
