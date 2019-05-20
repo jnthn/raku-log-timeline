@@ -12,7 +12,7 @@ class Log::Timeline::Output::JSONLines does Log::Timeline::Output {
 
     #| Logs an event.
     method log-event($type, Int $parent-id, Instant $timestamp, %data --> Nil) {
-        $!path.say: to-json :!pretty, {
+        $!handle.say: to-json :!pretty, {
             :m($type.module), :c($type.category), :n($type.name), :k(0),
             :p($parent-id), :t($timestamp.to-posix), :d(%data)
         }
@@ -20,7 +20,7 @@ class Log::Timeline::Output::JSONLines does Log::Timeline::Output {
 
     #| Logs the start of a task.
     method log-start($type, Int $parent-id, Int $id, Instant $timestamp, %data --> Nil) {
-        $!path.say: to-json :!pretty, {
+        $!handle.say: to-json :!pretty, {
             :m($type.module), :c($type.category), :n($type.name), :k(1),
             :i($id), :p($parent-id), :t($timestamp.to-posix), :d(%data)
         }
@@ -28,7 +28,7 @@ class Log::Timeline::Output::JSONLines does Log::Timeline::Output {
 
     #| Logs the end of a task.
     method log-end($type, Int $id, Instant $timestamp --> Nil) {
-        $!path.say: to-json :!pretty, {
+        $!handle.say: to-json :!pretty, {
             :m($type.module), :c($type.category), :n($type.name), :k(2),
             :i($id), :t($timestamp.to-posix)
         }
