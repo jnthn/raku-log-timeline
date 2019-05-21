@@ -3,7 +3,7 @@
   "description": "Log tasks with start/end periods and phases, as well as individual events.",
   "version": "0.1",
   "perl": "6.d",
-  "auth": "Write me!",
+  "auth": "Jonathan Worthington <jnthn@jnthn.net>",
   "depends": [
     "JSON::Fast"
   ],
@@ -16,6 +16,6 @@
     "Log::Timeline::Output::Socket": "lib/Log/Timeline/Output/Socket.pm6"
   },
   "resources": [],
-  "license": "Write me!",
-  "source-url": "Write me!"
+  "license": "Artistic-2.0",
+  "source-url": "https://github.com/jnthn/p6-log-timeline.git"
 }
