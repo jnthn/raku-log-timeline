@@ -14,7 +14,7 @@ class Log::Timeline::Output::JSONLines does Log::Timeline::Output {
     method log-event($type, Int $parent-id, Instant $timestamp, %data --> Nil) {
         $!handle.say: to-json :!pretty, {
             :m($type.module), :c($type.category), :n($type.name), :k(0),
-            :p($parent-id), :t($timestamp.to-posix), :d(%data)
+            :p($parent-id), :t($timestamp.Rat), :d(%data)
         }
     }
 
@@ -22,7 +22,7 @@ class Log::Timeline::Output::JSONLines does Log::Timeline::Output {
     method log-start($type, Int $parent-id, Int $id, Instant $timestamp, %data --> Nil) {
         $!handle.say: to-json :!pretty, {
             :m($type.module), :c($type.category), :n($type.name), :k(1),
-            :i($id), :p($parent-id), :t($timestamp.to-posix), :d(%data)
+            :i($id), :p($parent-id), :t($timestamp.Rat), :d(%data)
         }
     }
 
@@ -30,7 +30,7 @@ class Log::Timeline::Output::JSONLines does Log::Timeline::Output {
     method log-end($type, Int $id, Instant $timestamp --> Nil) {
         $!handle.say: to-json :!pretty, {
             :m($type.module), :c($type.category), :n($type.name), :k(2),
-            :i($id), :t($timestamp.to-posix)
+            :i($id), :t($timestamp.Rat)
         }
     }
 
