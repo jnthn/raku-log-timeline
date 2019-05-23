@@ -92,11 +92,11 @@ role Log::Timeline::Task[Str $module, Str $category, Str $name] {
             LEAVE $ongoing.end();
             do {
                 my $*LOG-TIMELINE-CURRENT-TASK := $ongoing;
-                task()
+                &task.count == 0 ?? task() !! task($ongoing)
             }
         }
         else {
-            task();
+            &task.count == 0 ?? task() !! task(Log::Timeline::Ongoing::Unlogged)
         }
     }
 
@@ -109,11 +109,11 @@ role Log::Timeline::Task[Str $module, Str $category, Str $name] {
             LEAVE $ongoing.end();
             do {
                 my $*LOG-TIMELINE-CURRENT-TASK := $ongoing;
-                task()
+                &task.count == 0 ?? task() !! task($ongoing)
             }
         }
         else {
-            task();
+            &task.count == 0 ?? task() !! task(Log::Timeline::Ongoing::Unlogged)
         }
     }
 
