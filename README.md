@@ -1,26 +1,36 @@
 # Log::Timeline
 
 When building an application with many ongoing, potentially overlapping,
-tasks, we may find ourselves wishing to observe what is going on inside of
-that application. Effectively, we'd like to log, but with a focus on things
-that happen over time rather than just individual events. The `Log::Timeline`
-module provides a means to do that.
+tasks, we may find ourselves wishing to observe what is going on. We'd like to
+log, but with a focus on things that happen over time rather than just
+individual events. The `Log::Timeline` module provides a means to do that.
+
+**Status:** while `Log::Timeline` itself works, the things to make it useful
+are still to come. It has been published at this point to enable integration
+of it into an upcoming Cro release, so HTTP requests and server pipelines can
+be logged. An upcoming Comma release will provide a means to visualize the
+timeline and observe it live.
 
 ## Key features
+
+Currently implemented:
 
 * Log tasks with start and end times
 * Log individual events
 * Tasks and events can be associated with an enclosing parent task
 * Include data with the logged tasks and events
 * Have data logged to a file, or exposed over a socket
-* Turn on/off what is logged at runtime (socket mode only)
-* Introspect what tasks and events a given distribution can log
+
+Coming soon:
+
 * Supported by [Cro](https://cro.services/), to offer insight into client
   and server request processing pipelines
+* Visualize task timelines in [Comma](https://commaide.com/)
+* Introspect what tasks and events a given distribution can log
 * When running on MoarVM, get access to a whole range of VM-level tasks and
   events too, such as GC runs, thread spawns, file open/close, process
   spawning, optimization, etc.
-* Visualize task timelines in [Comma](https://commaide.com/)
+* Turn on/off what is logged at runtime (socket mode only)
 
 ## Providing tasks and events in a distribution
 
