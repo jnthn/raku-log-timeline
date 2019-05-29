@@ -32,16 +32,41 @@ lives-ok
         { $conn = await IO::Socket::Async.connect('localhost', $TEST_PORT) },
         'Can connect to the socket server';
 
+my $received = '';
+react {
+    whenever $conn.Supply {
+        $received ~= $_;
+        done;
+    }
+    whenever Promise.in(1) {
+        done;
+    }
+}
+is $received, '', 'Server did not send anything before the client did';
+
+lives-ok { await $conn.print: Q:b/{ "min": 1, "max": 1 }\n/ },
+        'Could send initial handshake message';
+
+my @handshake;
 my @prior-events;
 react {
     whenever $conn.Supply.lines {
-        push @prior-events, $_;
-        done if @prior-events == 2;
+        if @handshake {
+            push @prior-events, $_;
+            done if @prior-events == 2;
+        }
+        else {
+            push @handshake, $_;
+        }
     }
     whenever Promise.in(10) {
         diag 'Timeout while waiting for first events';
         done;
     }
+}
+is @handshake.elems, 1, 'Received handshake message';
+given from-json(@handshake[0]) {
+    is-deeply .<ver>, 1, 'Server send back confirmation of version';
 }
 is @prior-events.elems, 2, 'Got two events sent over the socket';
 given from-json(@prior-events[0]) {
@@ -91,5 +116,49 @@ given from-json(@next-event[0]) {
 }
 
 $conn.close;
+
+subtest 'Handles lack of JSON input' => {
+    lives-ok
+            { $conn = await IO::Socket::Async.connect('localhost', $TEST_PORT) },
+            'Can make another connection to the server';
+    @handshake = ();
+    my $timed-out = False;
+    react {
+        whenever $conn.Supply.lines {
+            push @handshake, $_;
+            LAST done;
+        }
+        whenever Promise.in(10) {
+            $timed-out = True;
+            done;
+        }
+        await $conn.print("not even JSON\n");
+    }
+    is @handshake.elems, 1, 'Got a response on bad handshake';
+    ok from-json(@handshake[0])<err>:exists, 'Server sent an error';
+    nok $timed-out, 'Server closed the bad connection attemt';
+}
+
+subtest 'Handles unknown version' => {
+    lives-ok
+            { $conn = await IO::Socket::Async.connect('localhost', $TEST_PORT) },
+            'Can make another connection to the server';
+    @handshake = ();
+    my $timed-out = False;
+    react {
+        whenever $conn.Supply.lines {
+            push @handshake, $_;
+            LAST done;
+        }
+        whenever Promise.in(10) {
+            $timed-out = True;
+            done;
+        }
+        await $conn.print(Q:b/{ "min": 42, "max": 44 }\n/);
+    }
+    is @handshake.elems, 1, 'Got a response on bad handshake';
+    ok from-json(@handshake[0])<err>:exists, 'Server sent an error';
+    nok $timed-out, 'Server closed the bad connection attemt';
+}
 
 done-testing;

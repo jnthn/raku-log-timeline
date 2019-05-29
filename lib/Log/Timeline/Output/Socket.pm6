@@ -1,6 +1,9 @@
 use Log::Timeline::Output;
 use JSON::Fast;
 
+# The protocol version we understand (adapt when we have multiple).
+my constant VERSION = 1;
+
 #| Sends output over a socket.
 class Log::Timeline::Output::Socket does Log::Timeline::Output {
     #| The host to listen on.
@@ -28,12 +31,45 @@ class Log::Timeline::Output::Socket does Log::Timeline::Output {
             my @unsent;
 
             whenever IO::Socket::Async.listen($!host, $!port) -> $conn {
-                %connections{$conn} = True;
+                my $handshook = False;
+                whenever $conn.Supply.lines -> $message {
+                    unless $handshook {
+                        # Check handshake message.
+                        my %init := from-json $message;
+                        if %init<min> ~~ Int && %init<max> ~~ Int {
+                            if %init<min> <= VERSION <= %init<max> {
+                                %connections{$conn} = True;
+                                accept-connection($conn);
+                            }
+                            else {
+                                error($conn, "Unsupported version");
+                            }
+                        }
+                        else {
+                            error($conn, "Missing min/max versions in handshake");
+                        }
+                        CATCH {
+                            default {
+                                error($conn, "Invalid handshake");
+                            }
+                        }
+                    }
+                    LAST %connections{$conn}:delete;
+                }
+            }
+
+            sub error($conn, $err) {
+                my $json = to-json :!pretty, { :$err }
+                whenever $conn.print("$json\n") {
+                    $conn.close;
+                }
+            }
+
+            sub accept-connection($conn) {
+                my $handshake-json = to-json :!pretty, { :ver(VERSION) }
+                $conn.print("$handshake-json\n");
                 while @unsent.shift -> $event-json {
                     $conn.print("$event-json\n");
-                }
-                whenever $conn {
-                    LAST %connections{$conn}:delete;
                 }
             }
 
