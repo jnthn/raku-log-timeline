@@ -114,7 +114,23 @@ MyApp::Log::Search.log: :$query -> {
 ### Logging to a file in JSON lines format
 
 Set the `LOG_TIMELINE_JSON_LINES` environment variable to the name of a file
-to log to.
+to log to. Each line is an object with the following keys:
+
+* `m` - module
+* `c` - category
+* `n` - name
+* `t` - timestamp
+* `d` - data (an object with any extra data)
+* `k` - kind (0 = event, 1 = task start, 2 = task end)
+
+A task start (kind 1) and task end (2) will also have:
+
+* `i` - a unique ID for the task, starting from 1, to allow starts and ends to
+  be matched up
+
+An event (kind 0) or task start (kind 1) may also have:
+
+* `p` - the parent task ID
 
 ### Socket logging
 
@@ -126,3 +142,44 @@ Set the `LOG_TIMELINE_SERVER` environment variable to either:
 **Warning:** Don't expose the socket server to the internet directly; there
 is no authentication or encryption. If really wishing to expose it, bind it to
 a local port and then use an SSH tunnel.
+
+#### Handshake
+
+Upon connection the client *must* send a JSON line consisting of an object that
+includes the keys:
+
+* `min` - the minimum protocol version that the client understands
+* `max` - the maximum protocol version that the client understands
+
+The client *may* include other keys in the object speculatively (for example, if
+protocol version 3 supports a key "foo", but it speaks anything from 1 to 3, then
+it may include the key "foo", knowing that a previous version of the server will
+simply ignore it).
+
+In response to this, the server *must* send a JSON line consisting of an object
+that includes *at most one of the following*:
+
+* `ver` - the version number of the protocol that the server will speak, if it is
+  understands any of the versions in the range the client proposed
+* `err` - an error string explaining why it will not accept the request
+
+In the case of sending an `err`, the server *should* close the connection.
+
+If the initial communication from the client to the server:
+
+* Does not start with a `{`
+* Does not reach a complete line within 1 megabyte of data
+
+Then the server may send a *may* send a JSON line with an object containing `err` and
+then close the connection.
+
+#### Protocol version 1
+
+No additional configuration keys from the client are recognized in this version of the
+protocol.
+
+Beyond the initial handshake line, the client should not send anything to the server. The
+client may close the connection at any time.
+
+The server sends JSON lines to the client. This lines are the same as specified for the
+JSON lines file format.
