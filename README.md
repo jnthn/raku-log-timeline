@@ -21,11 +21,15 @@ Currently implemented:
 * Include data with the logged tasks and events
 * Have data logged to a file, or exposed over a socket
 
-Coming soon:
+Upcoming integrations (quite possibly released by the time you read this):
 
-* Supported by [Cro](https://cro.services/), to offer insight into client
-  and server request processing pipelines
-* Visualize task timelines in [Comma](https://commaide.com/)
+* Support by [Cro](https://cro.services/), to offer insight into client
+  and server request processing pipelines (in 0.8.1)
+* Visualize task timelines in [Comma](https://commaide.com/) (in Comma Complete
+  2018.5, in Comma Community 2018.7)
+
+Planned:
+
 * Introspect what tasks and events a given distribution can log
 * When running on MoarVM, get access to a whole range of VM-level tasks and
   events too, such as GC runs, thread spawns, file open/close, process
