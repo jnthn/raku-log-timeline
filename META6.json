@@ -6,7 +6,6 @@
   "authors": [
     "Jonathan Worthington <jnthn@jnthn.net>"
   ],
-  "auth": "Jonathan Worthington <jnthn@jnthn.net>",
   "depends": [
     "JSON::Fast"
   ],
