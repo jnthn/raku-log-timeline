@@ -20,13 +20,10 @@ Currently implemented:
 * Tasks and events can be associated with an enclosing parent task
 * Include data with the logged tasks and events
 * Have data logged to a file, or exposed over a socket
-
-Upcoming integrations (quite possibly released by the time you read this):
-
+* Visualize task timelines in [Comma](https://commaide.com/) (from Comma Complete
+  2018.5, and will be in Comma Community 2018.7)
 * Support by [Cro](https://cro.services/), to offer insight into client
-  and server request processing pipelines (in 0.8.1)
-* Visualize task timelines in [Comma](https://commaide.com/) (in Comma Complete
-  2018.5, in Comma Community 2018.7)
+  and server request processing pipelines (from 0.8.1)
 
 Planned:
 
