@@ -187,3 +187,9 @@ client may close the connection at any time.
 
 The server sends JSON lines to the client. This lines are the same as specified for the
 JSON lines file format.
+
+## Checking if logging is active
+
+Call `Log::Timeline.has-output` to see if some kind of logging output is set up in
+this process, This is useful for avoiding introducing logging if it will never take
+place.

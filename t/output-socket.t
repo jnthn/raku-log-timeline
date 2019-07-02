@@ -19,6 +19,8 @@ class My::Test::TaskB does Log::Timeline::Task['TestApp', 'Test Cat 2', 'Task B'
 
 }
 
+ok Log::Timeline.has-output, 'We have output configured for Log::Timeline';
+
 my $task-a;
 lives-ok
         { $task-a = My::Test::TaskA.start(propa => 'foo') },

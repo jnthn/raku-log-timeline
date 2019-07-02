@@ -11,6 +11,8 @@ class My::Test::EventB does Log::Timeline::Event['TestApp', 'Test Cat 2', 'EvB']
 class My::Test::TaskA does Log::Timeline::Task['TestApp', 'Test Cat 1', 'Task A'] { }
 class My::Test::TaskB does Log::Timeline::Task['TestApp', 'Test Cat 2', 'Task B'] { }
 
+ok Log::Timeline.has-output, 'We have output configured for Log::Timeline';
+
 lives-ok
         {
             My::Test::TaskA.log: propa => 'foo', {
