@@ -1,7 +1,7 @@
 {
   "name": "Log::Timeline",
   "description": "Log tasks with start/end periods and phases, as well as individual events.",
-  "version": "0.2",
+  "version": "0.3",
   "perl": "6.d",
   "authors": [
     "Jonathan Worthington <jnthn@jnthn.net>"
