@@ -66,7 +66,7 @@ To declare an event (something that happens at a single point in time), do the
 `Log::Timeline::Task` role.
 
 ```perl6
-unit module MyApp::Log;
+unit module MyApp::Log::LogTimelineSchema;
 use Log::Timeline;
 
 class CacheExpired does Log::Timeline::Event['MyApp', 'Backend', 'Cache Expired'] { }
@@ -79,25 +79,25 @@ class Search does Log::Timeline::Task['My App', 'Backend', 'Search'] { }
 Use the module in which you placed the events and/or tasks you wish to log.
 
 ```perl6
-use MyApp::Log;
+use MyApp::Log::LogTimelineSchema;
 ```
 
 To log an event, simply call the `log` method:
 
 ```perl6
-MyApp::Log::CacheExpired.log();
+MyApp::Log::LogTimelineSchema::CacheExpired.log();
 ```
 
 Optionally passing extra data as named arguments:
 
 ```perl6
-MyApp::Log::CacheExpired.log(:$cause);
+MyApp::Log::LogTimelineSchema::CacheExpired.log(:$cause);
 ```
 
 To log a task, also call `log`, but pass a block that will execute the task:
 
 ```perl6
-MyApp::Log::Search.log: -> {
+MyApp::Log::LogTimelineSchema::Search.log: -> {
     # search is performed here
 }
 ```
@@ -105,7 +105,7 @@ MyApp::Log::Search.log: -> {
 Named parameters may also be passed to provide extra data:
 
 ```perl6
-MyApp::Log::Search.log: :$query -> {
+MyApp::Log::LogTimelineSchema::Search.log: :$query -> {
     # search is performed here
 }
 ```
