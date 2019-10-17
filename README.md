@@ -71,7 +71,7 @@ use Log::Timeline;
 
 class CacheExpired does Log::Timeline::Event['MyApp', 'Backend', 'Cache Expired'] { }
 
-class Search does Log::Timeline::Task['My App', 'Backend', 'Search'] { }
+class Search does Log::Timeline::Task['MyApp', 'Backend', 'Search'] { }
 ```
 
 ### Produce tasks and events
