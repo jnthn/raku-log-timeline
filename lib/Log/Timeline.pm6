@@ -83,6 +83,14 @@ role Log::Timeline::Task[Str $module, Str $category, Str $name] {
     #| The name of the event/task.
     method name(--> Str) { $name }
 
+    method log-fixed(Instant $from, Instant $to, *%data, :$parent) {
+        with PROCESS::<$LOG-TIMELINE-OUTPUT> {
+            my $ongoing = Log::Timeline::Ongoing::Logged.new(:task(self), output => $_); # output=> could pass Any
+            .log-start($ongoing.task, $parent.?id // 0, $ongoing.id, $from, %data);
+            .log-end($ongoing.task, $ongoing.id, $to);
+        }
+    }
+
     #| Runs a task, logging its start and end time along with the specified
     #| data. The parent task will be taken from C<$*LOG-TIMELINE-CURRENT-TASK>,
     #| if there is one.
