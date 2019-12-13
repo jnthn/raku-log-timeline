@@ -1,3 +1,4 @@
+BEGIN PROCESS::<$LOG-TIMELINE-NO-RUNTIME-EVENTS> = True;
 use Log::Timeline;
 use JSON::Fast;
 use Test;

@@ -1,6 +1,7 @@
 use Log::Timeline::Model;
 use Log::Timeline::Output::JSONLines;
 use Log::Timeline::Output::Socket;
+use Log::Timeline::Source::MoarVM;
 
 class Log::Timeline {
     #| Check if an output of some kind is set up for logging.
@@ -26,3 +27,8 @@ orwith %*ENV<LOG_TIMELINE_JSON_LINES> {
     PROCESS::<$LOG-TIMELINE-OUTPUT> = Log::Timeline::Output::JSONLines.new(path => .IO);
 }
 END try .close with PROCESS::<$LOG-TIMELINE-OUTPUT>;
+
+# With that in place, we also try to set up any runtime events we might produce.
+if Log::Timeline.has-output && !PROCESS::<$LOG-TIMELINE-NO-RUNTIME-EVENTS> {
+    Log::Timeline::Source::MoarVM::start();
+}

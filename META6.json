@@ -16,7 +16,8 @@
     "Log::Timeline::Model": "lib/Log/Timeline/Model.pm6",
     "Log::Timeline::Output": "lib/Log/Timeline/Output.pm6",
     "Log::Timeline::Output::JSONLines": "lib/Log/Timeline/Output/JSONLines.pm6",
-    "Log::Timeline::Output::Socket": "lib/Log/Timeline/Output/Socket.pm6"
+    "Log::Timeline::Output::Socket": "lib/Log/Timeline/Output/Socket.pm6",
+    "Log::Timeline::Source::MoarVM": "lib/Log/Timeline/Source/MoarVM.pm6"
   },
   "resources": [],
   "license": "Artistic-2.0",
