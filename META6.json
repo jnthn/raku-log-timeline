@@ -13,6 +13,7 @@
   "test-depends": [],
   "provides": {
     "Log::Timeline": "lib/Log/Timeline.pm6",
+    "Log::Timeline::Model": "lib/Log/Timeline/Model.pm6",
     "Log::Timeline::Output": "lib/Log/Timeline/Output.pm6",
     "Log::Timeline::Output::JSONLines": "lib/Log/Timeline/Output/JSONLines.pm6",
     "Log::Timeline::Output::Socket": "lib/Log/Timeline/Output/Socket.pm6"
