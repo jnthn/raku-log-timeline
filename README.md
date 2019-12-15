@@ -5,12 +5,6 @@ tasks, we may find ourselves wishing to observe what is going on. We'd like to
 log, but with a focus on things that happen over time rather than just
 individual events. The `Log::Timeline` module provides a means to do that.
 
-**Status:** while `Log::Timeline` itself works, the things to make it useful
-are still to come. It has been published at this point to enable integration
-of it into an upcoming Cro release, so HTTP requests and server pipelines can
-be logged. An upcoming Comma release will provide a means to visualize the
-timeline and observe it live.
-
 ## Key features
 
 Currently implemented:
@@ -21,7 +15,7 @@ Currently implemented:
 * Include data with the logged tasks and events
 * Have data logged to a file, or exposed over a socket
 * Visualize task timelines in [Comma](https://commaide.com/) (from Comma Complete
-  2018.5, and will be in Comma Community 2018.7)
+  2018.5 and Comma Community 2018.7)
 * Support by [Cro](https://cro.services/), to offer insight into client
   and server request processing pipelines (from 0.8.1)
 
