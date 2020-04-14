@@ -34,12 +34,17 @@ given FakeOutput.new -> FakeOutput $output {
             'Can log an event with no data';
     lives-ok { My::Test::EventB.log(foo => 42) },
             'Can log an event with data';
+    lives-ok { My::Test::EventB.log( { foo => 42 } ) },
+            'Can log an event with data';
 
-    is $output.entries.elems, 2, 'Got expected output';
+    is $output.entries.elems, 3, 'Got expected output';
     is-deeply $output.entries[0],
             { :event, :type(My::Test::EventA), :parent-id(0), :data{} },
             'First event logged correctly';
     is-deeply $output.entries[1],
+            { :event, :type(My::Test::EventB), :parent-id(0), :data{ foo => 42 } },
+            'Second event logged correctly with its data';
+    is-deeply $output.entries[2],
             { :event, :type(My::Test::EventB), :parent-id(0), :data{ foo => 42 } },
             'Second event logged correctly with its data';
 }

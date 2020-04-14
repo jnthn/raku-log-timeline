@@ -56,6 +56,15 @@ role Log::Timeline::Event[Str $module, Str $category, Str $name] {
         }
     }
 
+    #| Log an event of this type. The hash passed provides
+    #| extra data about the event. The parent task will be taken from
+    #| C<$*LOG-TIMELINE-CURRENT-TASK>, if there is one.
+    multi method log(%data --> Nil) {
+        with PROCESS::<$LOG-TIMELINE-OUTPUT> {
+            self!log-internal($_, $*LOG-TIMELINE-CURRENT-TASK // Nil, %data)
+        }
+    }
+
     #| Log an event of this type. The parent parameter is used to manually
     #| set the parent task; if there should be no parent, an undefined object
     #| (such as Nil) should be passed. The named parameters provide extra data
