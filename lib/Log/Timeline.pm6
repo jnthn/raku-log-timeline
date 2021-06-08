@@ -1,4 +1,5 @@
 use Log::Timeline::Model;
+use Log::Timeline::Output::CBORSequence;
 use Log::Timeline::Output::JSONLines;
 use Log::Timeline::Output::Socket;
 
@@ -24,5 +25,8 @@ with %*ENV<LOG_TIMELINE_SERVER> {
 }
 orwith %*ENV<LOG_TIMELINE_JSON_LINES> {
     PROCESS::<$LOG-TIMELINE-OUTPUT> = Log::Timeline::Output::JSONLines.new(path => .IO);
+}
+orwith %*ENV<LOG_TIMELINE_CBOR_SEQUENCE> {
+    PROCESS::<$LOG-TIMELINE-OUTPUT> = Log::Timeline::Output::CBORSequence.new(path => .IO);
 }
 END try .close with PROCESS::<$LOG-TIMELINE-OUTPUT>;
