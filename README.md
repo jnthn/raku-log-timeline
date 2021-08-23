@@ -13,7 +13,7 @@ Currently implemented:
 * Log individual events
 * Tasks and events can be associated with an enclosing parent task
 * Include data with the logged tasks and events
-* Have data logged to a file, or exposed over a socket
+* Have data logged to a file (JSON or CBOR), or exposed over a socket
 * Visualize task timelines in [Comma](https://commaide.com/) (from Comma Complete
   2018.5 and Comma Community 2018.7)
 * Support by [Cro](https://cro.services/), to offer insight into client
@@ -126,6 +126,11 @@ A task start (kind 1) and task end (2) will also have:
 An event (kind 0) or task start (kind 1) may also have:
 
 * `p` - the parent task ID
+
+### Logging to a file as a CBOR sequence
+
+Set the `LOG_TIMELINE_CBOR_SEQUENCE` environment variable to the name of a file
+to log into. The schema matches that of the JSON lines output.
 
 ### Socket logging
 
