@@ -31,3 +31,7 @@ orwith %*ENV<LOG_TIMELINE_CBOR_SEQUENCE> {
     PROCESS::<$LOG-TIMELINE-OUTPUT> = Log::Timeline::Output::CBORSequence.new(path => .IO);
 }
 END try .close with PROCESS::<$LOG-TIMELINE-OUTPUT>;
+
+if Log::Timeline.has-output {
+    setup-raku-events();
+}

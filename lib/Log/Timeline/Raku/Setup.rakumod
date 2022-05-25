@@ -1,7 +1,10 @@
 use v6.d;
 use Log::Timeline::Raku::LogTimelineSchema;
 
-without %*ENV<RAKUDO_PRECOMP_WITH> {
+sub setup-raku-events() is export {
+    # No logging in precompilation processes.
+    return with %*ENV<RAKUDO_PRECOMP_WITH>;
+    # See which Raku events are requested.
     with %*ENV<LOG_TIMELINE_RAKU_EVENTS> {
         for .split(',') -> $event {
             given $event {
