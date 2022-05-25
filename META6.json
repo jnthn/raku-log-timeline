@@ -6,6 +6,7 @@
   "authors": [
     "Jonathan Worthington <jnthn@jnthn.net>"
   ],
+  "auth": "zef:jnthn",
   "depends": [
     "CBOR::Simple",
     "JSON::Fast"
