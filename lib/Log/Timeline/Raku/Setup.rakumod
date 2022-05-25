@@ -40,6 +40,14 @@ sub setup-raku-events() is export {
                         }
                     }
                 }
+                when 'start' {
+                    setup-start-logging();
+                    CATCH {
+                        default {
+                            warn "Failed to set up start logging: $_";
+                        }
+                    }
+                }
                 default {
                     warn "Unsupported Log::Timeline Raku event '$event'";
                 }
@@ -140,6 +148,25 @@ sub setup-process-logging() {
         my $task = Log::Timeline::Raku::LogTimelineSchema::RunProcess.start:
             :command($proc.command.map({ /\s/ ?? qq/"$_"/ !! $_ }).join(' '));
         $promise.then({ $task.end });
+        $promise
+    }
+}
+
+sub setup-start-logging() {
+    Promise.^lookup('start').wrap: -> Promise, &code, |c {
+        my $file = &code.?file // 'Unknown';
+        with $file.index('(') {
+            $file .= substr($_ + 1, $file.chars - ($_ + 2));
+        }
+        my $line = &code.?line // 'Unknown';
+        my $start-task = Log::Timeline::Raku::LogTimelineSchema::Start.start(:$file, :$line);
+        my $queued-task = Log::Timeline::Raku::LogTimelineSchema::StartQueued.start($start-task);
+        my &wrapped-code = -> |c {
+            $queued-task.end;
+            code(|c)
+        }
+        my $promise = callwith(Promise, &wrapped-code, |c);
+        $promise.then({ $start-task.end });
         $promise
     }
 }

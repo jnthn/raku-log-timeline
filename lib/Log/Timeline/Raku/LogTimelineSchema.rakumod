@@ -9,3 +9,5 @@ class AsyncSocketConnect does Log::Timeline::Task['Raku', 'Async Socket', 'Conne
 class AsyncSocketEstablish does Log::Timeline::Task['Raku', 'Async Socket', 'Establish Connection'] { }
 class RunThread does Log::Timeline::Task['Raku', 'Concurrency', 'Thread'] { }
 class RunProcess does Log::Timeline::Task['Raku', 'Concurrency', 'Run Process'] { }
+class Start does Log::Timeline::Task['Raku', 'Concurrency', 'Start'] { }
+class StartQueued does Log::Timeline::Task['Raku', 'Concurrency', 'Start Queued'] { }
