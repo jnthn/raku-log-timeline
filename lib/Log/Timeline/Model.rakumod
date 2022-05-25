@@ -82,6 +82,7 @@ role Log::Timeline::Task[Str $module, Str $category, Str $name] {
     #| The name of the event/task.
     method name(--> Str) { $name }
 
+    #| Log a task starting and ending at specified instants.
     method log-fixed(Instant $from, Instant $to, *%data, :$parent) {
         with PROCESS::<$LOG-TIMELINE-OUTPUT> {
             my $ongoing = Log::Timeline::Ongoing::Logged.new(:task(self), output => $_); # output=> could pass Any
