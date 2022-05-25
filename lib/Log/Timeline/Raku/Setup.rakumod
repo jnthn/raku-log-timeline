@@ -84,6 +84,17 @@ sub setup-file-logging() {
         $task.end if $task;
         callsame;
     }
+
+    # IO::Path's slurp and spurt methods use VM-level ops directly.
+    for <slurp spurt> -> $method {
+        IO::Path.^lookup($method).wrap: -> IO::Path $path, |c {
+            my $task = Log::Timeline::Raku::LogTimelineSchema::FileOpen.start(:path(~$path));
+            my \result = callsame;
+            $task.end;
+            CATCH { $task.end }
+            result
+        }
+    }
 }
 
 sub setup-thread-logging() {
