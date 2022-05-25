@@ -11,3 +11,4 @@ class RunThread does Log::Timeline::Task['Raku', 'Concurrency', 'Thread'] { }
 class RunProcess does Log::Timeline::Task['Raku', 'Concurrency', 'Run Process'] { }
 class Start does Log::Timeline::Task['Raku', 'Concurrency', 'Start'] { }
 class StartQueued does Log::Timeline::Task['Raku', 'Concurrency', 'Start Queued'] { }
+class Await does Log::Timeline::Task['Raku', 'Concurrency', 'Await'] { }

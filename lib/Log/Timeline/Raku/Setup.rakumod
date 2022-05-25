@@ -48,6 +48,14 @@ sub setup-raku-events() is export {
                         }
                     }
                 }
+                when 'await' {
+                    setup-await-logging();
+                    CATCH {
+                        default {
+                            warn "Failed to set up await logging: $_";
+                        }
+                    }
+                }
                 default {
                     warn "Unsupported Log::Timeline Raku event '$event'";
                 }
@@ -128,7 +136,7 @@ sub setup-async-socket-logging() {
         my $socket-task = Log::Timeline::Raku::LogTimelineSchema::AsyncSocketConnect.start(:$host, :$port);
         my $establish-task = Log::Timeline::Raku::LogTimelineSchema::AsyncSocketEstablish.start($socket-task);
         $promise.then({
-        $establish-task.end;
+            $establish-task.end;
             if $promise.status == Kept {
                 $socket-lock.protect: { %sockets{$promise.result} = $socket-task; }
             }
@@ -151,7 +159,7 @@ sub setup-process-logging() {
     Proc::Async.^lookup('start').wrap: -> Proc::Async $proc, |c {
         my $promise = callsame;
         my $task = Log::Timeline::Raku::LogTimelineSchema::RunProcess.start:
-            :command($proc.command.map({ /\s/ ?? qq/"$_"/ !! $_ }).join(' '));
+                :command($proc.command.map({ /\s/ ?? qq/"$_"/ !! $_ }).join(' '));
         $promise.then({ $task.end });
         $promise
     }
@@ -159,19 +167,47 @@ sub setup-process-logging() {
 
 sub setup-start-logging() {
     Promise.^lookup('start').wrap: -> Promise, &code, |c {
-        my $file = &code.?file // 'Unknown';
-        with $file.index('(') {
-            $file .= substr($_ + 1, $file.chars - ($_ + 2));
+        my $file = tweak-file(&code.?file // 'Unknown');
+        if $file.starts-with('SETTING') {
+            callsame
         }
-        my $line = &code.?line // 'Unknown';
-        my $start-task = Log::Timeline::Raku::LogTimelineSchema::Start.start(:$file, :$line);
-        my $queued-task = Log::Timeline::Raku::LogTimelineSchema::StartQueued.start($start-task);
-        my &wrapped-code = -> |c {
-            $queued-task.end;
-            code(|c)
+        else {
+            my $line = &code.?line // 'Unknown';
+            my $start-task = Log::Timeline::Raku::LogTimelineSchema::Start.start(:$file, :$line);
+            my $queued-task = Log::Timeline::Raku::LogTimelineSchema::StartQueued.start($start-task);
+            my &wrapped-code = -> |c {
+                $queued-task.end;
+                code(|c)
+            }
+            my $promise = callwith(Promise, &wrapped-code, |c);
+            $promise.then({ $start-task.end });
+            $promise
         }
-        my $promise = callwith(Promise, &wrapped-code, |c);
-        $promise.then({ $start-task.end });
-        $promise
+    }
+}
+
+sub setup-await-logging() {
+    &await.wrap: -> |c {
+        my $frame = callframe(1);
+        my $file = tweak-file($frame.?file // 'Unknown');
+        my $line = $frame.?line // 'Unknown';
+        my $task = Log::Timeline::Raku::LogTimelineSchema::Await.start(:$file, :$line);
+        my \result = callsame;
+        $task.end;
+        CATCH { $task.?end }
+        result
+    }
+}
+
+my $cwd = ~$*CWD;
+sub tweak-file(Str $file) {
+    with $file.index('(') {
+        $file.substr($_ + 1, $file.chars - ($_ + 2))
+    }
+    elsif $file.starts-with($cwd) {
+        $file.substr($cwd.chars + 1)
+    }
+    else {
+        $file
     }
 }
