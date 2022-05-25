@@ -105,16 +105,21 @@ sub setup-async-socket-logging() {
     my $socket-lock = Lock.new;
     my Log::Timeline::Ongoing %sockets{IO::Socket::Async};
 
-    IO::Socket::Async.^lookup('listen').wrap: -> $class, $host, $port, |c {
-        my $task = Log::Timeline::Raku::LogTimelineSchema::AsyncSocketListen.start(:$host, :$port);
-        my $listen = callsame();
-        supply whenever $listen -> $socket {
-            $socket-lock.protect: {
-                %sockets{$socket} = Log::Timeline::Raku::LogTimelineSchema::AsyncSocketIncoming.start:
-                        $task, :host($socket.peer-host), :port($socket.peer-port);
+    IO::Socket::Async.^lookup('listen').wrap: -> $class, $host, $port, :$LOG-TIMELINE-IGNORE, |c {
+        if $LOG-TIMELINE-IGNORE {
+            callsame;
+        }
+        else {
+            my $task = Log::Timeline::Raku::LogTimelineSchema::AsyncSocketListen.start(:$host, :$port);
+            my $listen = callsame();
+            supply whenever $listen -> $socket {
+                $socket-lock.protect: {
+                    %sockets{$socket} = Log::Timeline::Raku::LogTimelineSchema::AsyncSocketIncoming.start:
+                            $task, :host($socket.peer-host), :port($socket.peer-port);
+                }
+                emit $socket;
+                CLOSE $task.end;
             }
-            emit $socket;
-            CLOSE $task.end;
         }
     }
 

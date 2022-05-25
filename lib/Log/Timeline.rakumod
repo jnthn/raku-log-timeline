@@ -14,6 +14,7 @@ class Log::Timeline {
 # The mainline of a module runs once. We use this to do the setup phase of
 # the desired output, based on environment variables.
 with %*ENV<LOG_TIMELINE_SERVER> {
+    setup-raku-events();
     when /^ \d+ $/ {
         PROCESS::<$LOG-TIMELINE-OUTPUT> = Log::Timeline::Output::Socket.new(port => +$/);
     }
@@ -25,13 +26,11 @@ with %*ENV<LOG_TIMELINE_SERVER> {
     }
 }
 orwith %*ENV<LOG_TIMELINE_JSON_LINES> {
+    setup-raku-events();
     PROCESS::<$LOG-TIMELINE-OUTPUT> = Log::Timeline::Output::JSONLines.new(path => .IO);
 }
 orwith %*ENV<LOG_TIMELINE_CBOR_SEQUENCE> {
+    setup-raku-events();
     PROCESS::<$LOG-TIMELINE-OUTPUT> = Log::Timeline::Output::CBORSequence.new(path => .IO);
 }
 END try .close with PROCESS::<$LOG-TIMELINE-OUTPUT>;
-
-if Log::Timeline.has-output {
-    setup-raku-events();
-}

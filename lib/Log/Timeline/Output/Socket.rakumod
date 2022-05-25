@@ -30,7 +30,7 @@ class Log::Timeline::Output::Socket does Log::Timeline::Output {
             my %connections{IO::Socket::Async} is Hash;
             my @unsent;
 
-            whenever IO::Socket::Async.listen($!host, $!port) -> $conn {
+            whenever IO::Socket::Async.listen($!host, $!port, :LOG-TIMELINE-IGNORE) -> $conn {
                 my $handshook = False;
                 whenever $conn.Supply.lines -> $message {
                     unless $handshook {
