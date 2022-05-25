@@ -2,6 +2,7 @@ use Log::Timeline::Model;
 use Log::Timeline::Output::CBORSequence;
 use Log::Timeline::Output::JSONLines;
 use Log::Timeline::Output::Socket;
+use Log::Timeline::Raku::Setup;
 
 class Log::Timeline {
     #| Check if an output of some kind is set up for logging.

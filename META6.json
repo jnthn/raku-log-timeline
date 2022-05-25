@@ -19,7 +19,9 @@
     "Log::Timeline::Output": "lib/Log/Timeline/Output.rakumod",
     "Log::Timeline::Output::CBORSequence": "lib/Log/Timeline/Output/CBORSequence.rakumod",
     "Log::Timeline::Output::JSONLines": "lib/Log/Timeline/Output/JSONLines.rakumod",
-    "Log::Timeline::Output::Socket": "lib/Log/Timeline/Output/Socket.rakumod"
+    "Log::Timeline::Output::Socket": "lib/Log/Timeline/Output/Socket.rakumod",
+    "Log::Timeline::Raku::LogTimelineSchema": "lib/Log/Timeline/Raku/LogTimelineSchema.rakumod",
+    "Log::Timeline::Raku::Setup": "lib/Log/Timeline/Raku/Setup.rakumod"
   },
   "resources": [],
   "license": "Artistic-2.0",
