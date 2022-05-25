@@ -29,6 +29,14 @@ without %*ENV<RAKUDO_PRECOMP_WITH> {
                         }
                     }
                 }
+                when 'process' {
+                    setup-process-logging();
+                    CATCH {
+                        default {
+                            warn "Failed to set up process logging: $_";
+                        }
+                    }
+                }
                 default {
                     warn "Unsupported Log::Timeline Raku event '$event'";
                 }
@@ -123,3 +131,12 @@ sub setup-async-socket-logging() {
     }
 }
 
+sub setup-process-logging() {
+    Proc::Async.^lookup('start').wrap: -> Proc::Async $proc, |c {
+        my $promise = callsame;
+        my $task = Log::Timeline::Raku::LogTimelineSchema::RunProcess.start:
+            :command($proc.command.map({ /\s/ ?? qq/"$_"/ !! $_ }).join(' '));
+        $promise.then({ $task.end });
+        $promise
+    }
+}

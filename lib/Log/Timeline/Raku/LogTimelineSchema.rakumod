@@ -8,3 +8,4 @@ class AsyncSocketIncoming does Log::Timeline::Task['Raku', 'Async Socket', 'Inco
 class AsyncSocketConnect does Log::Timeline::Task['Raku', 'Async Socket', 'Connect'] { }
 class AsyncSocketEstablish does Log::Timeline::Task['Raku', 'Async Socket', 'Establish Connection'] { }
 class RunThread does Log::Timeline::Task['Raku', 'Concurrency', 'Thread'] { }
+class RunProcess does Log::Timeline::Task['Raku', 'Concurrency', 'Run Process'] { }
