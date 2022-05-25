@@ -2,5 +2,9 @@ use v6.d;
 unit module Log::Timeline::Raku::LogTimelineSchema;
 use Log::Timeline::Model;
 
-class FileOpen does Log::Timeline::Task['Raku', 'IO', 'File Open'] { }
+class FileOpen does Log::Timeline::Task['Raku', 'File IO', 'File Open'] { }
+class AsyncSocketListen does Log::Timeline::Task['Raku', 'Async Socket', 'Listen'] { }
+class AsyncSocketIncoming does Log::Timeline::Task['Raku', 'Async Socket', 'Incoming Connection'] { }
+class AsyncSocketConnect does Log::Timeline::Task['Raku', 'Async Socket', 'Connect'] { }
+class AsyncSocketEstablish does Log::Timeline::Task['Raku', 'Async Socket', 'Establish Connection'] { }
 class RunThread does Log::Timeline::Task['Raku', 'Concurrency', 'Thread'] { }
