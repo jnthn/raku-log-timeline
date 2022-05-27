@@ -5,27 +5,55 @@ tasks, we may find ourselves wishing to observe what is going on. We'd like to
 log, but with a focus on things that happen over time rather than just
 individual events. The `Log::Timeline` module provides a means to do that.
 
-## Key features
+As well as annotating your own applications with `Log::Timeline` tasks and
+events, the module can provide various events relating to the Raku standard
+library, and has already been integrated in some modules, such as Cro.
 
-Currently implemented:
+## Key features
 
 * Log tasks with start and end times
 * Log individual events
 * Tasks and events can be associated with an enclosing parent task
-* Include data with the logged tasks and events
+* Include data (keys mapped to values) with the logged tasks and events
 * Have data logged to a file (JSON or CBOR), or exposed over a socket
 * Visualize task timelines in [Comma](https://commaide.com/) (from Comma Complete
   2018.5 and Comma Community 2018.7)
 * Support by [Cro](https://cro.services/), to offer insight into client
   and server request processing pipelines (from 0.8.1)
+* Enable logging of various Raku standard library events: the start and end
+  times of `start` blocks and `await` statements, socket connections, files
+  being open, and more
 
 Planned:
 
 * Introspect what tasks and events a given distribution can log
-* When running on MoarVM, get access to a whole range of VM-level tasks and
-  events too, such as GC runs, thread spawns, file open/close, process
-  spawning, optimization, etc.
+* Log tasks indicating when GC happens
 * Turn on/off what is logged at runtime (socket mode only)
+
+## Turning on Raku built-ins logging
+
+Set the `LOG_TIMELINE_RAKU_EVENTS` environment variable to a comma-separated
+list of events to log. For example:
+
+```
+LOG_TIMELINE_RAKU_EVENTS=file,thread,socket,process,start,await
+```
+
+The events available are:
+
+* `await` - logs tasks showing time spent in an `await`
+* `file` - logs tasks showing the time files are open
+* `process` - logs tasks showing the time that a sub-process is running
+  (the logging is done on `Proc::Async`, which covers everything since the
+  synchronous process API is a wrapper around the asynchronous one)
+* `socket` - logs a task when a listening asynchornous socket is listening,
+  and child tasks for each connection it receives; for connections, the
+  connection is logged along with a child task for the time taken for the
+  initial connection establishment
+* `start` - logs tasks showing the time that `start` blocks are "running"
+  (however, they may within that time be suspended due to an `await`)
+* `thread` - logs creation of Raku `Thread`s. These are typically created by
+  the thread pool when using Raku's high-level concurrency features.
 
 ## Providing tasks and events in a distribution
 
